@@ -1,0 +1,47 @@
+import express from 'express';
+import "dotenv/config";
+import db from './db.js';
+
+const app = express();
+const PORT = process.env.PORT || 3000;
+
+app.use(express.json());
+
+app.get('/', (req, res) => {
+    try{
+        res.send("Hello World!");
+    }
+    catch(error){
+        res.status(500).send("Something went wrong")
+    }
+});
+
+app.get('/products', async (req, res) => {
+    try{
+        const [products] = await db.query("SELECT * FROM products");
+        res.send(products);
+    } catch (error) {
+        console.error("Error fetching products: ", error);
+        res.status(500).send("Error fetching products");
+    }
+})
+
+
+app.post('/products', async (req, res) => {
+    const {name, price} = req.body;
+    if(!name || !price) {
+        return res.status(400).send("Name and price are required");
+    }
+    try{
+        const [result] = await db.query("INSERT INTO products (name, price) VALUES (?, ?)", [name, price]);
+        res.status(201).send("Product created successfully");
+    } catch (error) {
+        console.error("Error creating product: ", error);
+        res.status(500).send("Error creating product");
+    }
+});
+
+
+app.listen(PORT, () => {
+    console.log(`Server running on http://localhost:${PORT}`);
+});
