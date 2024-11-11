@@ -10,9 +10,9 @@ fs.writeFile(filename, content, (err) => {
     if (err) throw err;
     console.log(`The ${filename} has been saved!`);
 
-    fs.readFile(filename, 'utf8', (err, content) => {
-        if (err) throw err;
-        console.log("File contents:", content);
-    });
+fs.readFile(filename, 'utf8', (err, content) => {
+    if (err) throw err;
+    console.log("File contents:", content);
+});
 });
 
