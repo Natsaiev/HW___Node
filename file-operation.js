@@ -1,0 +1,18 @@
+import fs from 'fs';
+import dotenv from 'dotenv';
+
+dotenv.config();
+
+const filename = process.env.FILENAME;
+const content = "Hi John ٩(๑❛ᴗ❛๑)۶";
+
+fs.writeFile(filename, content, (err) => {
+    if (err) throw err;
+    console.log(`The ${filename} has been saved!`);
+
+    fs.readFile(filename, 'utf8', (err, content) => {
+        if (err) throw err;
+        console.log("File contents:", content);
+    });
+});
+
