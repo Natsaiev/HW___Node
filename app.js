@@ -1,0 +1,40 @@
+import express from 'express';
+import { sequelize } from './config/db.js'; // импорт файла с конфигурацией Sequelize
+import { Book } from './models/index.js';
+
+const app = express();
+app.use(express.json()); // middleware для обработки JSON
+
+// GET маршрут для получения всех книг
+app.get('/books', async (req, res) => {
+    try {
+        const books = await Book.findAll();
+        res.json(books);
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+});
+
+// POST маршрут для создания книги
+app.post('/books', async (req, res) => {
+    try {
+        const { title, author, year } = req.body;
+        const book = await Book.create({ title, author, year });
+        res.status(201).json(book);
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+});
+
+// Запуск сервера
+const PORT = 3000;
+app.listen(PORT, async () => {
+    try {
+        await sequelize.authenticate();
+        console.log(`Сервер запущен на порту ${PORT}, подключение к БД успешно.`);
+    } catch (err) {
+        console.error('Ошибка подключения к базе данных:', err);
+    }
+});
+
+export default app;

@@ -1,0 +1,9 @@
+import { sequelize } from '../config/db.js'; // Теперь sequelize будет экспортироваться корректно
+import BookModel from './book.js';
+
+export const Book = BookModel(sequelize, Sequelize.DataTypes);
+
+export const db = {
+  sequelize,
+  Sequelize,
+};
