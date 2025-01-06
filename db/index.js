@@ -1,0 +1,28 @@
+import { MongoClient } from "mongodb";
+import "dotenv/config";
+const uri = process.env.MONGODB_URI;
+const client = new MongoClient(uri);
+
+let dbConnection; // Переменная для хранения экземпляра базы данных
+
+// Функция для подключения к MongoDB
+async function connectToDb() {
+  try {
+    await client.connect();
+    console.log("Соединение установлено с MongoDB");
+    dbConnection = client.db("test_db");
+  } catch (error) {
+    console.error("Ошибка подключения к MongoDB:", error);
+    throw error;
+  }
+}
+
+// Функция для получения текущего соединения с базой данных
+function getDb() {
+  if (!dbConnection) {
+    throw new Error("Соединение с базой данных не установлено!");
+  }
+  return dbConnection;
+}
+
+export { getDb, connectToDb };
