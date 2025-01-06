@@ -1,0 +1,62 @@
+body {
+  font-family: Arial, sans-serif;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  background-color: rgb(219, 189, 152);
+}
+
+#messages {
+  flex: 1;
+  overflow-y: auto;
+  padding: 10px;
+  border: 1px solid #ddd;
+}
+
+#form {
+  display: flex;
+  border-top: 1px solid #ddd;
+}
+
+#input {
+  flex: 1;
+  padding: 10px;
+  border: none;
+  border-right: 1px solid #ddd;
+}
+
+#input:focus {
+  outline: none;
+}
+
+#send {
+  padding: 10px;
+  border: none;
+  background: #007bff;
+  color: white;
+  cursor: pointer;
+}
+
+#send:hover {
+  background: #0056b3;
+}
+
+@keyframes admin-glow {
+  0% {
+    text-shadow: 0 0 5px red, 0 0 10px red, 0 0 20px orange;
+  }
+  50% {
+    text-shadow: 0 0 10px yellow, 0 0 20px orange, 0 0 30px red;
+  }
+  100% {
+    text-shadow: 0 0 5px red, 0 0 10px red, 0 0 20px orange;
+  }
+}
+
+.admin {
+  color: red;
+  font-weight: bold;
+  animation: admin-glow 2s infinite;
+}

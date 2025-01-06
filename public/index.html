@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Socket.io Chat</title>
+    <script src="/socket.io/socket.io.js"></script>
+    <link rel="stylesheet" href="/style.css" />
+  </head>
+  <body>
+    <div id="messages"></div>
+    <form id="form">
+      <input id="input" autocomplete="off" placeholder="Введите сообщение..." />
+      <button id="send" type="submit">Отправить</button>
+    </form>
+    <script>
+      const socket = io();
+
+      const messages = document.getElementById("messages");
+      const form = document.getElementById("form");
+      const input = document.getElementById("input");
+
+      // Функция для генерации случайного цвета для других пользователей
+      const getRandomColor = () => {
+        const letters = "0123456789ABCDEF";
+        let color = "#";
+        for (let i = 0; i < 6; i++) {
+          color += letters[Math.floor(Math.random() * 16)];
+        }
+        return color;
+      };
+
+      // Запрашиваем ник у пользователя при подключении
+      const nickname = prompt("Введите ваш ник:") || "Гость";
+      if (nickname === "Admin") {
+        alert("Добро пожаловать, администратор!");
+      } else {
+        alert(`Добро пожаловать, ${nickname}!`);
+      }
+
+      const userColors = {};
+
+      // Обработка приветственного сообщения
+      socket.on("welcome", (msg) => {
+        const item = document.createElement("div");
+        item.textContent = msg;
+        messages.appendChild(item);
+        messages.scrollTop = messages.scrollHeight;
+      });
+
+      // Обработка входящих сообщений
+      socket.on("message", (data) => {
+        const item = document.createElement("div");
+
+        // Применяем анимацию для администратора
+        if (data.nickname === "Admin") {
+          item.classList.add("admin");
+        } else {
+          // Присваиваем случайный цвет для других пользователей
+          if (!userColors[data.nickname]) {
+            userColors[data.nickname] = getRandomColor();
+          }
+          item.style.color = userColors[data.nickname];
+        }
+
+        item.textContent = `${data.nickname}: ${data.text}`;
+        messages.appendChild(item);
+        messages.scrollTop = messages.scrollHeight;
+      });
+
+      // Отправка сообщения серверу
+      form.addEventListener("submit", (e) => {
+        e.preventDefault();
+        if (input.value) {
+          socket.emit("message", { nickname, text: input.value });
+          input.value = "";
+        }
+      });
+    </script>
+  </body>
+</html>
